@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+</head>
+
+<body
+    class="bg-[url(https://i.pinimg.com/736x/5d/83/72/5d8372abf8a55f70526dc91a06cae309.jpg)] bg-no-repeat bg-cover bg-center">
+    <div id="group3">
+        <div class=" flex flex-col justify-center items-center  h-screen">
+            <div class="text-center  ">
+                <h1 class="text-4xl text-white font-bold">TIC-TAC-TOE</h1>
+            </div>
+
+
+            <div
+                class="grid grid-cols-3 p-5 bg-radial-[at_50%_75%] from-blue-200 via-orange-500 to-yellow-900 to-90% rounded-lg mt-10">
+                <div v-for="(row, rowIndex) in boardCard" :key="rowIndex" class="">
+                    <div v-for="(card, colIndex) in row" :key="colIndex"
+                        class="text-center cursor-pointer bg-blue-200  w-24 h-24  m-4 duration-200 rounded-2xl hover:bg-gray-400 text-8xl font-bold"
+                        @click="cardClick(rowIndex,colIndex)" :class="{'text-pink-500':card === 'X',
+                                 'text-blue-500':card === 'O', 'cursor-not-allowed': card !== '' || winner}">
+
+                        {{card}}
+                    </div>
+                </div>
+            </div>
+            <p class="text-white font-bold text-4xl mt-5">
+                {{message}}
+            </p>
+            <div class="flex justify-center">
+                <button @click="restartGame"
+                    class="bg-radial-[at_50%_75%] from-yellow-200 via-orange-400 to-orange-900  to-90% py-2 px-5  rounded-lg  duration-200 cursor-pointer font-bold text-2xl">Restart</button>
+            </div>
+            <!-- <div class="">
+                    <p class="text-center font-semibold text-5xl text-green-600 "></p>
+                </div> -->
+        </div>
+
+    </div>
+    <script>
+        Vue.createApp({
+            data() {
+                return {
+                    boardCard: [
+                        ["", "", ""],
+                        ["", "", ""],
+                        ["", "", ""]
+                    ],
+                    message: "Player X's turn",
+                    currentPlayer: 'X',
+                    winner: null
+
+
+
+                }
+            },
+            methods: {
+                cardClick(row, col) {
+                    if (this.boardCard[row][col] !== "" || this.winner) {
+                        return;
+                    }
+
+                    this.boardCard[row][col] = this.currentPlayer;
+
+                    if (this.isWinner(this.currentPlayer)) {
+                        this.winner = this.currentPlayer;
+                        this.message = `Player ${this.winner} wins!`;
+                    } else if (this.isDraw(this.currentPlayer)) {
+                        this.message = 'Game Draw'
+                    }
+                    else {
+
+                        this.currentPlayer = this.currentPlayer === 'X' ? 'O' : 'X';
+                        this.message = `Player ${this.currentPlayer}'s Turn`;
+                    }
+
+                },
+                isWinner(player) {
+                    // for row
+                    for (let row = 0; row < this.boardCard.length; row++) {
+                        if (this.boardCard[row][0] === player
+                            && this.boardCard[row][1] === player
+                            && this.boardCard[row][2] === player) {
+                            return true;
+                        }
+                    }
+                    // for column 
+                    for (let col = 0; col < this.boardCard.length; col++) {
+                        if (this.boardCard[0][col] === player
+                            && this.boardCard[1][col] === player
+                            && this.boardCard[2][col] === player) {
+                            return true;
+                        }
+                    }
+                    // for diagonal
+                    if (this.boardCard[0][0] === player
+                        && this.boardCard[1][1] === player
+                        && this.boardCard[2][2] === player) {
+                        return true;
+                    }
+
+                    if (this.boardCard[0][2] === player
+                        && this.boardCard[1][1] === player
+                        && this.boardCard[2][0] === player) {
+                        return true;
+                    }
+                    return false;
+                },
+                restartGame() {
+                    this.boardCard = [
+                        ["", "", ""],
+                        ["", "", ""],
+                        ["", "", ""]
+                    ];
+                    this.message = "Player X's turn";
+                    this.currentPlayer = 'X';
+                    this.winner = null;
+                },
+                isDraw() {
+                    for (let row = 0; row < this.boardCard.length; row++) {
+                        for (let col = 0; col < this.boardCard.length; col++) {
+                            if (this.boardCard[row][col] === '') {
+                                return false;
+                            }
+                        }
+                    }
+                    return !this.isWinner('X') && !this.isWinner('O');
+
+                },
+
+
+
+
+            }
+        }).mount('#group3')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    </script>
+
+
+</body>
+
+</html>
